@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <signal.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
@@ -43,5 +44,7 @@ void _puts(char *str);
 char *_getline(char *cmd, int fd, int *status);
 char *_changer(unsigned int number);
 void _error(list_t *list, char *string);
+int main();
+void command_not_found_handle();
 
 #endif

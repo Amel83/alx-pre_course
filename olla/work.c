@@ -1,22 +1,26 @@
 #include "main.h"
+#include <stdio.h>
+#define _POSIX_C_SOURCE 200809L
+
 /**
  * main - the main function fot other prototypes
  * doesn't take any parameter
  * Return: 0
  */
-int main(void)
+int main()
 {
-	char **args = NULL, *line = NULL;
-	int num = 0, status = 0, len;
+	char **args = NULL,*line = NULL;
+	int status = 0, len,num = 0;
 	size_t i = 0;
-	ssize_t bytes = 0;
 
-	signal(SIGINT, sig_handler);
-	while (bytes != EOF)
+	
+	while(1)
 	{
-		_isatty();
-		bytes = getline(&line, &i, stdin);
-		_EOF(bytes, line);
+	
+		if (getline(&line, &i, stdin) == -1)
+		{
+			exit(1);
+		}
 		len = _strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
 		{
@@ -74,8 +78,7 @@ void execute_command(char **args)
 {
 	int status;
 	pid_t pid;
-	char *cmd, *dir = NULL, *path;
-	list_t list;
+	char *cmd, *path;
 
 	pid = fork();
 	if (pid == -1)
@@ -90,20 +93,17 @@ void execute_command(char **args)
 
 		if (path == NULL)
 		{
-			list.args = args;
-			list.number = 1;
-			_error(&list, ": not found\n");
-			_puts(dir);
-			_puts("\n");
+			
+			sprintf("%s: 1: %s not found",args[0],args[0]);
 			exit(127);
+	
 		}
 		args[0] = path;
 		if (execve(args[0], args, environ) == -1)
 		{
-			list.args = args;
-			list.number = 1;
-			_error(&list, " \n");
+			sprintf("%s: 1: %s not found",args[0],args[0]);
 			exit(127);
+
 		}
 	}
 	else
